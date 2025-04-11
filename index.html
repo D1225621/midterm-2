@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>計時器</title>
+
+</head>
+<body>
+
+<!-- 標題 -->
+<h1>計時器</h1>
+
+<!-- 顯示倒數時間的區塊 -->
+<div id="display">00:00:00</div>
+
+<!-- 標籤：說明下方輸入框用途 -->
+<label for="targetTime">目標日期及時間：</label>
+
+<!-- 目標日期與時間輸入框（datetime-local 型態會顯示日期時間選擇器） -->
+<input type="datetime-local" id="targetTime">
+
+<!-- 開始 / 暫停 / 繼續 按鈕 -->
+<button id="startBtn">開始</button>
+
+<!-- 重置按鈕 -->
+<button id="resetBtn">重置</button>
+
+</body>
+
+<style>
+    /* 設定整個畫面的字型與置中 */
+    body {
+        font-family: "Arial", sans-serif; /* 使用清晰字型 */
+        text-align: center;                /* 文字置中 */
+        margin-top: 100px;                 /* 往下移一點 */
+    }
+
+    /* 標題樣式 */
+    h1 {
+        font-size: 36px;                   /* 標題大小 */
+        margin-bottom: 30px;              /* 標題與倒數時間的間距 */
+    }
+
+    /* 倒數時間顯示區塊樣式 */
+    #display {
+        font-size: 48px;                   /* 時間字體大 */
+        font-weight: bold;                /* 粗體 */
+        margin: 20px 0;                   /* 上下間距 */
+    }
+
+    /* 日期時間輸入欄的樣式 */
+    input[type="datetime-local"] {
+        padding: 10px;                    /* 內距 */
+        font-size: 16px;                  /* 字體大小 */
+        margin-bottom: 20px;             /* 與按鈕間距 */
+    }
+
+    /* 所有按鈕樣式 */
+    button {
+        padding: 10px 20px;              /* 按鈕內距 */
+        font-size: 16px;                 /* 字體大小 */
+        margin: 0 5px;                   /* 按鈕左右間距 */
+        cursor: pointer;                 /* 滑鼠變成手指 */
+    }
+
+    /* 按鈕 hover 效果（滑鼠移上去） */
+    button:hover {
+        background-color: #eee;          /* 變淡一點 */
+    }
+
+</style>
+</html>
+
+<script>
+    // 取得 HTML 中的各個元素
+    const display = document.getElementById('display');       // 顯示倒數時間的區塊
+    const targetTimeInput = document.getElementById('targetTime'); // 使用者輸入目標時間的 input 欄位
+    const startBtn = document.getElementById('startBtn');     // 「開始 / 暫停 / 繼續」按鈕
+    const resetBtn = document.getElementById('resetBtn');     // 「重置」按鈕
+
+    let countdownInterval;     // 用來儲存 setInterval 的 ID
+    let remainingTime = 0;     // 剩餘的毫秒數
+    let isRunning = false;     // 計時是否進行中
+    let isPaused = false;      // 是否暫停狀態
+
+    // 格式化時間顯示成 hh:mm:ss 格式
+    function formatTime(ms) {
+        const totalSeconds = Math.floor(ms / 1000);        // 轉為總秒數
+        const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0'); // 小時
+        const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0'); // 分鐘
+        const seconds = String(totalSeconds % 60).padStart(2, '0'); // 秒數
+        return `${hours}:${minutes}:${seconds}`;
+    }
+
+    // 開始倒數邏輯
+    function startCountdown() {
+        const now = new Date();                           // 當前時間
+        const targetTime = new Date(targetTimeInput.value); // 使用者設定的目標時間
+
+        // 檢查輸入時間是否合法
+        if (isNaN(targetTime.getTime())) {
+            alert('請先設定目標日期及時間');
+            return;
+        }
+
+        // 計算剩餘時間（毫秒）
+        remainingTime = targetTime - now;
+
+        // 如果時間已過
+        if (remainingTime <= 0) {
+            alert('目標時間已過，請重新設定');
+            return;
+        }
+
+        // 開始倒數，每秒更新畫面
+        countdownInterval = setInterval(() => {
+            remainingTime -= 1000; // 每秒減少 1 秒（1000 毫秒）
+            if (remainingTime <= 0) {
+                clearInterval(countdownInterval);
+                display.textContent = '00:00:00';         // 顯示結束
+                alert('時間到！');
+                reset();                                  // 時間到自動重置
+            } else {
+                display.textContent = formatTime(remainingTime); // 更新畫面
+            }
+        }, 1000);
+
+        isRunning = true;
+        isPaused = false;
+        startBtn.textContent = '暫停';  // 開始後改為「暫停」
+    }
+
+    // 暫停倒數邏輯
+    function pauseCountdown() {
+        clearInterval(countdownInterval);    // 停止倒數
+        isPaused = true;
+        startBtn.textContent = '繼續';       // 改為「繼續」
+    }
+
+    // 繼續倒數邏輯
+    function resumeCountdown() {
+        countdownInterval = setInterval(() => {
+            remainingTime -= 1000;
+            if (remainingTime <= 0) {
+                clearInterval(countdownInterval);
+                display.textContent = '00:00:00';
+                alert('時間到！');
+                reset();
+            } else {
+                display.textContent = formatTime(remainingTime);
+            }
+        }, 1000);
+
+        isPaused = false;
+        startBtn.textContent = '暫停';       // 繼續後改回「暫停」
+    }
+
+    // 重置倒數邏輯
+    function reset() {
+        clearInterval(countdownInterval);    // 清除倒數計時
+        display.textContent = '00:00:00';    // 顯示歸零
+        targetTimeInput.value = '';          // 清空輸入欄
+        startBtn.textContent = '開始';       // 恢復按鈕文字
+        isRunning = false;
+        isPaused = false;
+    }
+
+    // 綁定「開始 / 暫停 / 繼續」按鈕事件
+    startBtn.addEventListener('click', () => {
+        if (!isRunning) {
+            startCountdown();      // 尚未開始 → 開始倒數
+        } else if (!isPaused) {
+            pauseCountdown();      // 正在倒數 → 暫停
+        } else {
+            resumeCountdown();     // 已暫停 → 繼續倒數
+        }
+    });
+
+    // 綁定「重置」按鈕事件
+    resetBtn.addEventListener('click', reset);
+
+</script>
