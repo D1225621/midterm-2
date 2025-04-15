@@ -4,6 +4,49 @@
     <meta charset="UTF-8">
     <title>計時器</title>
 
+    <style>
+        /* 設定整個畫面的字型與置中 */
+        body {
+            font-family: "Arial", sans-serif; /* 使用清晰字型 */
+            text-align: center;                /* 文字置中 */
+            margin-top: 100px;                 /* 往下移一點 */
+        }
+
+        /* 標題樣式 */
+        h1 {
+            font-size: 36px;                   /* 標題大小 */
+            margin-bottom: 30px;              /* 標題與倒數時間的間距 */
+        }
+
+        /* 倒數時間顯示區塊樣式 */
+        #display {
+            font-size: 48px;                   /* 時間字體大 */
+            font-weight: bold;                /* 粗體 */
+            margin: 20px 0;                   /* 上下間距 */
+        }
+
+        /* 日期時間輸入欄的樣式 */
+        input[type="datetime-local"] {
+            padding: 10px;                    /* 內距 */
+            font-size: 16px;                  /* 字體大小 */
+            margin-bottom: 20px;             /* 與按鈕間距 */
+        }
+
+        /* 所有按鈕樣式 */
+        button {
+            padding: 10px 20px;              /* 按鈕內距 */
+            font-size: 16px;                 /* 字體大小 */
+            margin: 0 5px;                   /* 按鈕左右間距 */
+            cursor: pointer;                 /* 滑鼠變成手指 */
+        }
+
+        /* 按鈕 hover 效果（滑鼠移上去） */
+        button:hover {
+            background-color: #eee;          /* 變淡一點 */
+        }
+
+    </style>
+
 </head>
 <body>
 
@@ -24,52 +67,6 @@
 
 <!-- 重置按鈕 -->
 <button id="resetBtn">重置</button>
-
-</body>
-
-<style>
-    /* 設定整個畫面的字型與置中 */
-    body {
-        font-family: "Arial", sans-serif; /* 使用清晰字型 */
-        text-align: center;                /* 文字置中 */
-        margin-top: 100px;                 /* 往下移一點 */
-    }
-
-    /* 標題樣式 */
-    h1 {
-        font-size: 36px;                   /* 標題大小 */
-        margin-bottom: 30px;              /* 標題與倒數時間的間距 */
-    }
-
-    /* 倒數時間顯示區塊樣式 */
-    #display {
-        font-size: 48px;                   /* 時間字體大 */
-        font-weight: bold;                /* 粗體 */
-        margin: 20px 0;                   /* 上下間距 */
-    }
-
-    /* 日期時間輸入欄的樣式 */
-    input[type="datetime-local"] {
-        padding: 10px;                    /* 內距 */
-        font-size: 16px;                  /* 字體大小 */
-        margin-bottom: 20px;             /* 與按鈕間距 */
-    }
-
-    /* 所有按鈕樣式 */
-    button {
-        padding: 10px 20px;              /* 按鈕內距 */
-        font-size: 16px;                 /* 字體大小 */
-        margin: 0 5px;                   /* 按鈕左右間距 */
-        cursor: pointer;                 /* 滑鼠變成手指 */
-    }
-
-    /* 按鈕 hover 效果（滑鼠移上去） */
-    button:hover {
-        background-color: #eee;          /* 變淡一點 */
-    }
-
-</style>
-</html>
 
 <script>
     // 取得 HTML 中的各個元素
@@ -180,3 +177,8 @@
     resetBtn.addEventListener('click', reset);
 
 </script>
+
+</body>
+</html>
+
+
